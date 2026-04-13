@@ -585,10 +585,29 @@ h2 {
   letter-spacing: -0.03em;
 }
 
+.impact-leaderboard-header {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+
 .impact-map-frame {
   display: block;
   width: 100%;
-  min-height: 640px;
+  height: 100px;
+  min-height: 700px;
+  border: 0;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.impact-leaderboard-frame {
+  display: block;
+  width: 100%;
+  height: 100px;
+  min-height: 900px;
+  margin-top: 1.5rem;
   border: 0;
   border-radius: 28px;
   overflow: hidden;
@@ -893,7 +912,12 @@ body.dev-mode .dev-mode-toggle {
   }
 
   .impact-map-frame {
-    min-height: 480px;
+    min-height: 520px;
+    border-radius: 22px;
+  }
+
+  .impact-leaderboard-frame {
+    min-height: 900px;
     border-radius: 22px;
   }
 
