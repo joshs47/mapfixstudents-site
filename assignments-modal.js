@@ -10,6 +10,18 @@
     return;
   }
 
+  let firestoreApiPromise;
+
+  const getFirestoreApi = async () => {
+    if (!firestoreApiPromise) {
+      firestoreApiPromise = import(
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+      );
+    }
+
+    return firestoreApiPromise;
+  };
+
   const closeModal = () => {
     overlay.classList.remove("is-open");
     window.setTimeout(() => {
@@ -26,9 +38,18 @@
     });
   };
 
-  const createAssignmentCard = ({ title, link, imageUrl }) => {
+  const readImageAsDataUrl = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  const createAssignmentCard = ({ title, link, image, imageUrl }) => {
     const card = document.createElement("article");
     card.className = "assignment-card";
+    const imageSrc = imageUrl || image;
 
     const status = document.createElement("span");
     status.className = "assignment-card-status";
@@ -46,6 +67,11 @@
 
       const dropdown = document.createElement("div");
       dropdown.className = "assignment-card-menu-dropdown";
+
+      const renameButton = document.createElement("button");
+      renameButton.className = "assignment-card-menu-item";
+      renameButton.type = "button";
+      renameButton.textContent = "Rename Title";
 
       const completeButton = document.createElement("button");
       completeButton.className = "assignment-card-menu-item";
@@ -69,6 +95,17 @@
         menu.classList.toggle("is-open");
       });
 
+      renameButton.addEventListener("click", () => {
+        menu.classList.remove("is-open");
+        const nextTitle = window.prompt("Enter a new title for this assignment:", heading.textContent);
+
+        if (nextTitle && nextTitle.trim()) {
+          const trimmedTitle = nextTitle.trim();
+          heading.textContent = trimmedTitle;
+          image.alt = trimmedTitle;
+        }
+      });
+
       completeButton.addEventListener("click", () => {
         menu.classList.remove("is-open");
         if (window.confirm("Are you sure you want to mark this assignment as complete?")) {
@@ -83,14 +120,14 @@
         }
       });
 
-      dropdown.append(completeButton, deleteButton);
+      dropdown.append(renameButton, completeButton, deleteButton);
       menu.append(trigger, dropdown);
       card.append(menu);
     }
 
     const image = document.createElement("img");
     image.className = "assignment-card-image";
-    image.src = imageUrl;
+    image.src = imageSrc;
     image.alt = title;
 
     const body = document.createElement("div");
@@ -111,6 +148,20 @@
     body.append(heading, action);
     card.append(image, body);
     assignmentsGrid.append(card);
+  };
+
+  const loadAssignments = async () => {
+    try {
+      const { collection, getDocs } = await getFirestoreApi();
+      assignmentsGrid.innerHTML = "";
+
+      const snapshot = await getDocs(collection(db, "assignments"));
+      snapshot.forEach((doc) => {
+        createAssignmentCard(doc.data());
+      });
+    } catch (error) {
+      console.error("Error loading assignments:", error);
+    }
   };
 
   openButton.addEventListener("click", openModal);
@@ -136,7 +187,7 @@
     });
   });
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const formData = new FormData(form);
@@ -148,9 +199,19 @@
       return;
     }
 
-    const imageUrl = URL.createObjectURL(imageFile);
-    createAssignmentCard({ title, link, imageUrl });
-    form.reset();
-    closeModal();
+    try {
+      const { collection, addDoc } = await getFirestoreApi();
+      const image = await readImageAsDataUrl(imageFile);
+      const data = { title, link, image };
+
+      await addDoc(collection(db, "assignments"), data);
+      createAssignmentCard(data);
+      form.reset();
+      closeModal();
+    } catch (error) {
+      console.error("Error saving assignment:", error);
+    }
   });
+
+  loadAssignments();
 })();
