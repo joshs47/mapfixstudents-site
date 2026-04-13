@@ -68,49 +68,16 @@ a {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.9rem;
+  justify-content: center;
   text-decoration: none;
 }
 
-.brand-mark {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #3468e5 0%, #2950d0 100%);
-  box-shadow: 0 12px 28px rgba(45, 86, 201, 0.28);
-}
-
-.brand-mark svg {
-  width: 31px;
-  height: 31px;
-  stroke: #ffffff;
-  stroke-width: 2.4;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.brand-text {
-  display: inline-flex;
-  align-items: baseline;
-  font-family: "Inter", "Avenir Next", sans-serif;
-  font-size: clamp(1.25rem, 2vw, 1.65rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-.brand-text .brand-mapfix {
-  color: #eef3ff;
-}
-
-.brand-text .brand-students {
-  color: #4b8dff;
+.brand-logo {
+  display: block;
+  width: auto;
+  height: clamp(64px, 5.5vw, 80px);
+  max-width: min(380px, 48vw);
+  object-fit: contain;
 }
 
 .nav-tabs {
