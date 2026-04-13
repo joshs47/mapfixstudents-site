@@ -16,8 +16,8 @@
         <nav class="nav-tabs" aria-label="Main navigation">
           <a href="index.html">Home</a>
           <a href="impact.html">Impact</a>
-          <a href="approach.html">Who We Are</a>
           <a class="active" href="assignments.html">Assignments</a>
+          <a href="approach.html">Who We Are</a>
           <a href="contact.html">Contact</a>
         </nav>
       </header>
@@ -26,8 +26,45 @@
         <section class="hero centered">
           <span class="eyebrow">Assignments</span>
           <h1 class="assignments-title">Current Mapping Assignments</h1>
+          <button class="dev-assignment-button" type="button" data-open-assignment-modal>
+            Add Assignment
+          </button>
         </section>
+
+        <section class="assignments-grid" aria-label="Assignments list" data-assignments-grid></section>
       </main>
+
+      <div class="assignment-modal-overlay" data-assignment-modal-overlay hidden>
+        <div
+          class="assignment-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="assignment-modal-title"
+        >
+          <button
+            class="assignment-modal-close"
+            type="button"
+            aria-label="Close modal"
+            data-close-assignment-modal
+          >
+            ×
+          </button>
+          <h2 class="assignment-modal-title" id="assignment-modal-title">Add Assignment</h2>
+          <form class="assignment-modal-form" data-assignment-form>
+            <label class="assignment-modal-label" for="assignment-image">Image</label>
+            <input id="assignment-image" name="image" type="file" accept="image/*" required />
+
+            <label class="assignment-modal-label" for="assignment-title">Title</label>
+            <input id="assignment-title" name="title" type="text" placeholder="Assignment title" required />
+
+            <label class="assignment-modal-label" for="assignment-link">Link</label>
+            <input id="assignment-link" name="link" type="url" placeholder="https://example.com" required />
+
+            <button class="assignment-modal-submit" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+
       <button
         class="dev-mode-toggle"
         type="button"
@@ -37,5 +74,6 @@
       </button>
     </div>
     <script src="dev-mode.js"></script>
+    <script src="assignments-modal.js"></script>
   </body>
 </html>
