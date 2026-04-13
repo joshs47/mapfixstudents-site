@@ -565,6 +565,20 @@ h2 {
   box-shadow: 0 24px 52px rgba(47, 99, 229, 0.42);
 }
 
+.impact-map-section {
+  margin-top: 2rem;
+}
+
+.impact-map-frame {
+  display: block;
+  width: 100%;
+  min-height: 640px;
+  border: 0;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -815,5 +829,10 @@ h2 {
     min-height: 78px;
     border-radius: 24px;
     font-size: 1.25rem;
+  }
+
+  .impact-map-frame {
+    min-height: 480px;
+    border-radius: 22px;
   }
 }
