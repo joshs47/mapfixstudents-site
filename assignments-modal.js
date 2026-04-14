@@ -1,4 +1,4 @@
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
   const isDev = true;
   const openButton = document.querySelector("[data-open-assignment-modal]");
   const overlay = document.querySelector("[data-assignment-modal-overlay]");
@@ -9,18 +9,6 @@
   if (!openButton || !overlay || !closeButton || !form || !assignmentsGrid) {
     return;
   }
-
-  let firestoreApiPromise;
-
-  const getFirestoreApi = async () => {
-    if (!firestoreApiPromise) {
-      firestoreApiPromise = import(
-        "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
-      );
-    }
-
-    return firestoreApiPromise;
-  };
 
   const closeModal = () => {
     overlay.classList.remove("is-open");
@@ -102,7 +90,7 @@
         if (nextTitle && nextTitle.trim()) {
           const trimmedTitle = nextTitle.trim();
           heading.textContent = trimmedTitle;
-          image.alt = trimmedTitle;
+          imageElement.alt = trimmedTitle;
         }
       });
 
@@ -125,10 +113,10 @@
       card.append(menu);
     }
 
-    const image = document.createElement("img");
-    image.className = "assignment-card-image";
-    image.src = imageSrc;
-    image.alt = title;
+    const imageElement = document.createElement("img");
+    imageElement.className = "assignment-card-image";
+    imageElement.src = imageSrc;
+    imageElement.alt = title;
 
     const body = document.createElement("div");
     body.className = "assignment-card-body";
@@ -146,22 +134,8 @@
 
     card.append(status);
     body.append(heading, action);
-    card.append(image, body);
+    card.append(imageElement, body);
     assignmentsGrid.append(card);
-  };
-
-  const loadAssignments = async () => {
-    try {
-      const { collection, getDocs } = await getFirestoreApi();
-      assignmentsGrid.innerHTML = "";
-
-      const snapshot = await getDocs(collection(db, "assignments"));
-      snapshot.forEach((doc) => {
-        createAssignmentCard(doc.data());
-      });
-    } catch (error) {
-      console.error("Error loading assignments:", error);
-    }
   };
 
   openButton.addEventListener("click", openModal);
@@ -200,18 +174,14 @@
     }
 
     try {
-      const { collection, addDoc } = await getFirestoreApi();
       const image = await readImageAsDataUrl(imageFile);
       const data = { title, link, image };
 
-      await addDoc(collection(db, "assignments"), data);
       createAssignmentCard(data);
       form.reset();
       closeModal();
     } catch (error) {
-      console.error("Error saving assignment:", error);
+      console.error("Error creating assignment:", error);
     }
   });
-
-  loadAssignments();
-})();
+});
